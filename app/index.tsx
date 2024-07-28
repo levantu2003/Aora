@@ -30,11 +30,6 @@ export default function App() {
                 Khám phá những khả năng vô tận với {""}
                 <Text className="text-secondary-200">Aora</Text>
               </Text>
-              <Image
-                source={images.path}
-                className="w-[240px] h-[10px] absolute -bottom-2 -right-1"
-                resizeMode="contain"
-              />
             </View>
             <Text className="text-sm font-cfregular text-gray-100 mt-7 text-center">
               Nơi sáng tạo gặp đổi mới: bắt tay vào hành trình khám phá không
