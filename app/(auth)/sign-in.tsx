@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "@/constants";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { signIn } from "@/lib/appwrite";
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -12,9 +13,29 @@ const SignIn = () => {
     password: "",
   });
 
-  const submit = () => {};
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [isSubmiiting, setisSubmiiting] = useState(false);
+  const submit = async () => {
+    if (!form.email || !form.password) {
+      Alert.alert("Lỗi", "Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await signIn(form.email, form.password);
+
+      router.replace("/home");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Đã xảy ra lỗi không xác định";
+      Alert.alert("Lỗi", errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -47,7 +68,7 @@ const SignIn = () => {
             textStyles=""
             handlePress={submit}
             containerStyles="mt-7"
-            isLoading={isSubmiiting}
+            isLoading={isSubmitting}
           />
           <View className="justify-center pt-5 flex-row gap-2">
             <Text className="text-lg text-gray-100 font-cfregular">
