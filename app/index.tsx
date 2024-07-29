@@ -9,7 +9,7 @@ import { userGlobalContext } from "@/context/GlobalProvider";
 export default function App() {
   const { isLoading, isLoggedIn } = userGlobalContext();
 
-  if (!isLoading && isLoggedIn) return <Redirect href="/home>" />;
+  if (!isLoading && isLoggedIn) return <Redirect href="/home" />;
 
   return (
     <View>
