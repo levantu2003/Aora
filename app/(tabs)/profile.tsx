@@ -26,7 +26,7 @@ import InfoBox from "@/components/InfoBox";
 const Profile = () => {
   const { user, setUser, setisLoggedIn } = userGlobalContext();
   const [isLoading, setIsLoading] = useState(true);
-  const [posts, setPosts] = useState([]);
+  const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
 
   useEffect(() => {
     const checkAuth = async () => {

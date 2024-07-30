@@ -3,8 +3,8 @@ import React from "react";
 
 const Bookmark = () => {
   return (
-    <View>
-      <Text>Bookmark</Text>
+    <View className="flex-1 items-center justify-center bg-gray-900">
+      <Text className="text-white text-xl font-bold">Still developing</Text>
     </View>
   );
 };
