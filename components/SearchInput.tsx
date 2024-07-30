@@ -1,39 +1,50 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import React, { useState } from "react";
 import { icons } from "@/constants";
+import { router, usePathname } from "expo-router";
 
-interface FormFieldProps {
+interface SearchInputProps {
   title: string;
   value: string;
   placeholder: string;
   handleChangeText: (text: string) => void;
-  otherStyles?: string;
-  keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
 }
 
-const SearchInput: React.FC<FormFieldProps> = ({
-  title,
-  value,
+const SearchInput: React.FC<SearchInputProps> = ({
+  value: initialValue,
   placeholder,
   handleChangeText,
-  otherStyles,
-  keyboardType = "default",
-  ...props
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [inputValue, setInputValue] = useState(initialValue);
+  const pathname = usePathname();
+
+  const handleSearch = () => {
+    if (!inputValue.trim()) {
+      return Alert.alert("Thiếu truy vấn", "Vui lòng nhập để tìm kiếm");
+    }
+    if (pathname.startsWith("/search")) {
+      router.setParams({ query: inputValue });
+    } else {
+      router.push(`/search/${inputValue}`);
+    }
+    handleChangeText(inputValue);
+  };
+
+  const onChangeText = (text: string) => {
+    setInputValue(text);
+  };
 
   return (
     <View className="border-2 border-black-200 rounded-2xl w-full h-16 px-4 bg-black-100 focus:border-secondary items-center flex-row space-x-4">
       <TextInput
         className="text-base mt-0.5 text-white flex-1 font-cfregular"
-        value={value}
-        placeholder="Tìm kiếm thể loại video"
-        placeholderTextColor="#7b7b8b"
-        onChangeText={handleChangeText}
-        secureTextEntry={title === "Password" && !showPassword}
-        keyboardType={keyboardType}
+        value={inputValue}
+        placeholder={placeholder}
+        placeholderTextColor="#CDCDE0"
+        onChangeText={onChangeText}
+        onSubmitEditing={handleSearch}
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleSearch}>
         <Image source={icons.search} className="w-5 h-5" resizeMode="contain" />
       </TouchableOpacity>
     </View>
