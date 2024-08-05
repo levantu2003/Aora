@@ -5,6 +5,7 @@ import CustomButton from "@/components/CustomButton";
 import { StatusBar } from "expo-status-bar";
 import { Redirect, router } from "expo-router";
 import { userGlobalContext } from "@/context/GlobalProvider";
+import React from "react";
 
 export default function App() {
   const { isLoading, isLoggedIn } = userGlobalContext();

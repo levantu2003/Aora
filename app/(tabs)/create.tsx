@@ -16,11 +16,18 @@ import * as DocumentPicker from "expo-document-picker";
 import { router } from "expo-router";
 import { createVideo } from "@/lib/appwrite";
 import { userGlobalContext } from "@/context/GlobalProvider";
+import { DocumentPickerAsset } from "expo-document-picker";
 
 const Create = () => {
   const { user } = userGlobalContext();
   const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({
+
+  const [form, setForm] = useState<{
+    title: string;
+    video: DocumentPickerAsset | null;
+    thumbnail: DocumentPickerAsset | null;
+    prompt: string;
+  }>({
     title: "",
     video: null,
     thumbnail: null,

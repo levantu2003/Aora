@@ -39,7 +39,11 @@ const Profile = () => {
         const currentUser = await getCurrentUser();
         if (currentUser) {
           setUser(currentUser);
-          fetchPosts(currentUser.$id);
+          (async (userId) => {
+            if (userId) {
+              const userPosts = await getUserPosts(userId);
+            }
+          })(currentUser.$id);
         } else {
           setUser(null);
           setisLoggedIn(false);
@@ -51,11 +55,6 @@ const Profile = () => {
     checkAuth();
   }, []);
 
-  const fetchPosts = async (userId) => {
-    if (userId) {
-      const userPosts = await getUserPosts(userId);
-    }
-  };
   console.log(user);
   const logout = async () => {
     setIsLoading(true);
@@ -73,7 +72,11 @@ const Profile = () => {
   const handleRefresh = async () => {
     setIsLoading(true);
     if (user?.$id) {
-      await fetchPosts(user.$id);
+      await (async (userId) => {
+        if (userId) {
+          const userPosts = await getUserPosts(userId);
+        }
+      })(user.$id);
     }
     setIsLoading(false);
   };
@@ -104,7 +107,7 @@ const Profile = () => {
     <SafeAreaView className="bg-primary h-full">
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.$id}
+        // keyExtractor={(item) => item.$id}
         renderItem={({ item }) => <VideoCard video={item} />}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
@@ -133,10 +136,11 @@ const Profile = () => {
               title={user?.username}
               containerStyle="mt-5"
               titleStyle="text-lg"
+              subtitle=""
             />
             <View className="mt-5 flex-row ">
               <InfoBox
-                title={posts.length}
+                title={posts.length.toString()}
                 subtitle="Bài đăng"
                 containerStyle="mr-10"
                 titleStyle="text-xl"
@@ -145,6 +149,7 @@ const Profile = () => {
                 title="6.9k"
                 subtitle="Người theo dõi"
                 titleStyle="text-xl"
+                containerStyle=""
               />
             </View>
           </View>

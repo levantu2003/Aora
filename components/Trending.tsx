@@ -7,27 +7,39 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  TextStyle,
+  ViewStyle,
+  ImageStyle,
+  ViewToken,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-import { Video, ResizeMode } from "expo-av";
+import { Video, ResizeMode, AVPlaybackStatus } from "expo-av";
+import React from "react";
 
-const zoomIn = {
-  0: {
-    scale: 0.9,
+type AnimationType = {
+  from: Partial<TextStyle & ViewStyle & ImageStyle>;
+  to: Partial<TextStyle & ViewStyle & ImageStyle>;
+};
+
+const zoomIn: AnimationType = {
+  from: {
+    transform: [{ scale: 0.9 }],
   },
-  1: {
-    scale: 1.1,
+  to: {
+    transform: [{ scale: 1.1 }],
   },
 };
-const zoomOut = {
-  0: {
-    scale: 1.1,
+
+const zoomOut: AnimationType = {
+  from: {
+    transform: [{ scale: 1.1 }],
   },
-  1: {
-    scale: 0.9,
+  to: {
+    transform: [{ scale: 0.9 }],
   },
 };
-const TrendingItem = ({ activeItem, item }) => {
+
+const TrendingItem = ({ activeItem, item }: { activeItem: any; item: any }) => {
   const [play, setPlay] = useState(false);
 
   return (
@@ -43,8 +55,8 @@ const TrendingItem = ({ activeItem, item }) => {
           resizeMode={ResizeMode.CONTAIN}
           useNativeControls
           shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
+          onPlaybackStatusUpdate={(status: AVPlaybackStatus) => {
+            if (status.isLoaded && status.didJustFinish) {
               setPlay(false);
             }
           }}
@@ -76,7 +88,11 @@ const TrendingItem = ({ activeItem, item }) => {
 const Trending = ({ posts }: { posts: Array<any> }) => {
   const [activeItem, setActiveItem] = useState(posts[1]);
 
-  const viewableItemsChanged = ({ viewableItems }) => {
+  const viewableItemsChanged = ({
+    viewableItems,
+  }: {
+    viewableItems: ViewToken[];
+  }) => {
     if (viewableItems.length > 0) {
       setActiveItem(viewableItems[0].key);
     }
@@ -93,7 +109,6 @@ const Trending = ({ posts }: { posts: Array<any> }) => {
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,
       }}
-      contentOffset={{ x: 170 }}
       horizontal
     />
   );
